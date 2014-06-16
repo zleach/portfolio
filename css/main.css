@@ -1,35 +1,111 @@
-html,body {
-    height: 100%;
-    font-family: 'Alegreya SC', serif;
+body {
+    font-family: 'Lato', serif;
+    padding-top: 50px;
+    color: #333;
+    font-size: 16px;
+    font-weight: 400;
 }
 
-.full-height {
-    height: 100%;
-    position: relative;
+p.title {
+    font-weight: 300;
 }
 
-.center-block {
-    font-size: 25px;
-    line-height: 22px;
-    position: absolute;
-    top: 50%;
-    left: 0px;
-    right: 0px;
-    text-align: center;
-    transform:translate(0,-50%);
-    -ms-transform:translate(0,-50%); /* IE 9 */
-    -webkit-transform:translate(0,-50%); /* Opera, Chrome, and Safari */
+h1 {
+    font-size: 24px;
 }
-address {
-    line-height: 1.2em;
-    position: absolute;
-    bottom: 0px;
+h2 {
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #EEE;
+    padding-bottom: 20px;
 }
-address.street {
-    float: left;
+p.description {
+    text-transform: none;
+    margin-top: 10px;
+    line-height: 18px;
+    font-size: 14px;
 }
-address.digital {
-    right: 12px;
-    text-align: right;
-    float: right;
+
+.item .thumbnail {
+    background-color: #FFF;
+    padding-bottom: 100%;
+    background-size: cover;
+    background-position: center center;
+}
+.item {
+    border: none;
+    margin-bottom: 15px;
+    padding-top: 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #0088CC;
+}
+.item:hover {
+    background-color: #F4F4F4;
+}
+
+
+/* Thumbs */
+.thumbnail.hoody-1 {
+    background-image: url('../img/hoody-1.jpg');   
+}
+.thumbnail.hoody-2 {
+    background-image: url('../img/hoody-2.jpg');   
+}
+.thumbnail.hoody-3 {
+    background-image: url('../img/hoody-3.jpg');   
+}
+.thumbnail.hoody-4 {
+    background-image: url('../img/hoody-4.jpg');   
+}
+
+
+.thumbnail.cursive-1 {
+    background-image: url('../img/cursive-1.jpg');   
+}
+.thumbnail.cursive-2 {
+    background-image: url('../img/cursive-2.jpg');   
+}
+.thumbnail.cursive-3 {
+    background-image: url('../img/cursive-3.jpg');   
+}
+.thumbnail.cursive-4 {
+    background-image: url('../img/cursive-4.jpg');   
+}
+.thumbnail.cursive-5 {
+    background-image: url('../img/cursive-5.jpg');   
+}
+.thumbnail.cursive-6 {
+    background-image: url('../img/cursive-6.jpg');   
+}
+
+.thumbnail.pushpin-1 {
+    background-image: url('../img/pushpin-1.jpg');   
+}
+.thumbnail.pushpin-2 {
+    background-image: url('../img/pushpin-2.jpg');   
+}
+.thumbnail.pushpin-3 {
+    background-image: url('../img/pushpin-3.jpg');   
+}
+.thumbnail.pushpin-4 {
+    background-image: url('../img/pushpin-4.jpg');   
+}
+.thumbnail.pushpin-5 {
+    background-image: url('../img/pushpin-5.jpg');   
+}
+.thumbnail.pushpin-6 {
+    background-image: url('../img/pushpin-6.jpg');   
+}
+.thumbnail.pushpin-7 {
+    background-image: url('../img/pushpin-7.jpg');   
+}
+
+.label {
+    margin-left: 10px;
+    margin-top: 10px;
+}
+.label.label-default {
+    background-color: #CCC;
 }
