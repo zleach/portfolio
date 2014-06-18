@@ -13,13 +13,23 @@ p.title {
 h1 {
     font-size: 24px;
 }
+
 h2 {
     font-size: 15px;
     text-transform: uppercase;
     letter-spacing: 1px;
     border-bottom: 1px solid #EEE;
-    padding-bottom: 20px;
+    padding-bottom: 12px;
 }
+
+.works h2 {
+    margin-top: 60px;
+}
+
+.works h2:first-of-type {
+    margin-top: -2px;
+}
+
 p.description {
     text-transform: none;
     margin-top: 10px;
@@ -33,6 +43,7 @@ p.description {
     background-size: cover;
     background-position: center center;
 }
+
 .item {
     border: none;
     margin-bottom: 15px;
@@ -41,12 +52,90 @@ p.description {
     cursor: pointer;
     color: #0088CC;
 }
+
 .item:hover {
     background-color: #F4F4F4;
 }
 
+.label {
+    font-size: 9px;
+    margin-left: 10px;
+    margin-top: 0px;
+}
+
+.label.label-default {
+    background-color: #0088CC;
+}
+
+.me {
+    width: 100px;
+    height: 100px;
+    background-color: #EEE;
+    border-radius: 100px;
+    background-image: url('../img/me2.jpg');
+    background-size: cover;
+    background-position: center center;
+}
+
+.sosumi {
+    float: right;
+    display: block;
+    font-size: 10px;
+    margin-bottom: 40px;
+    color: #CCC;
+}
+
+@media(max-width:767px){
+   .affix {
+     position: static;
+     width: auto;
+     top: 0;
+    }
+    .label {
+        display: block;
+        margin-top: 6px;
+        display: block;
+        width: 140px;
+        margin-left: 0px;
+        float: none !important;        
+    }
+    h2 > .label:first-of-type {
+        margin-top: 12px;
+    }
+}
+@media(max-width:480px){
+    .item {
+        width: 50%;
+    }
+}
 
 /* Thumbs */
+.thumbnail.inkling-1 {
+    background-image: url('../img/inkling-1.png');   
+}
+.thumbnail.inkling-2 {
+    background-image: url('../img/inkling-2.jpg');   
+}
+.thumbnail.inkling-3 {
+    background-image: url('../img/inkling-3.png');   
+}
+.thumbnail.inkling-4 {
+    background-image: url('../img/inkling-4.png');   
+}
+
+.thumbnail.itunes-1 {
+    background-image: url('../img/itunes-1.png');   
+}
+.thumbnail.itunes-2 {
+    background-image: url('../img/itunes-2.png');   
+}
+.thumbnail.itunes-3 {
+    background-image: url('../img/itunes-3.jpg');   
+}
+.thumbnail.itunes-4 {
+    background-image: url('../img/itunes-4.png');   
+}
+
 .thumbnail.hoody-1 {
     background-image: url('../img/hoody-1.jpg');   
 }
@@ -102,10 +191,3 @@ p.description {
     background-image: url('../img/pushpin-7.jpg');   
 }
 
-.label {
-    margin-left: 10px;
-    margin-top: 10px;
-}
-.label.label-default {
-    background-color: #CCC;
-}
