@@ -85,12 +85,14 @@ p.description {
     color: #CCC;
 }
 
-@media(max-width:767px){
+@media(max-width:992px){
    .affix {
      position: static;
      width: auto;
      top: 0;
     }
+}
+@media(max-width:767px){
     .label {
         display: block;
         margin-top: 6px;
@@ -191,3 +193,12 @@ p.description {
     background-image: url('../img/pushpin-7.jpg');   
 }
 
+html body div.fr-window div.fr-bubble canvas {
+    opacity: .1 !important;
+    display: none !important;
+    visibility: hidden;
+    margin-top: 1000px;
+    text-indent: -9999px;
+    line-height: 1000px;
+    -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0)), to(rgba(0,0,0,0)));
+}
