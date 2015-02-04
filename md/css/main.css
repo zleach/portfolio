@@ -1,0 +1,121 @@
+body,html {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+h5 {
+    margin-top: 5px;
+}
+.none {
+    display: none;
+}
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+.wrapper {
+    display: flex;    
+    height: 100%;
+}
+.panel {
+    flex: 1;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    margin: 0px;
+    padding: 0px;
+    box-shadow: none;
+}
+.panel.sidebar {
+    flex: none;
+    width: 250px;
+    border-right: 1px solid #DDD;
+    background-color: #F3F3F3;
+}
+.panel.sidebar ul {
+    padding: 0px;
+    margin: 0px;
+}
+.panel.sidebar li {
+    list-style: none;
+}
+.panel.sidebar .files h5 {
+    padding: 10px 20px 0px;
+    width: 100%;
+}
+.panel .files h5 span {
+    float: right;
+    display: block;
+    color: #0088CC;
+    cursor: pointer;
+}
+.panel .files h5 span:hover {
+    text-decoration: underline;
+}
+.panel.sidebar .files li {
+    cursor: pointer;
+    padding: 10px 20px;
+}
+.panel.sidebar .files li:hover {
+    background-color: #E8E8E8;
+}
+
+.panel.sidebar .files li.active {
+    background-color: #DDD;
+}
+
+.panel.sidebar form {
+    padding: 20px;
+}
+
+.panel.editor {
+    border-right: 1px solid #DDD;
+    position: relative;
+}
+.panel.editor textarea {
+    position: absolute;
+    top: 46px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    width: 100%;
+    outline: none;
+    border: none;
+    resize: none;
+    box-shadow: none;
+    font-size: 12px;
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    outline: 0;
+    padding: 10px;
+}
+.panel.content {
+}
+.panel .alert:empty {
+    display: none;
+}
+
+
+
+.panel .toolbar {
+    width: 100%;
+    height: 46px;
+    border-bottom: 1px solid #EEE;
+    background-color: #FAFAFA;
+    padding: 10px;
+}
+.panel .toolbar .save-button {
+    color: #0088CC;
+    cursor: pointer;
+    
+}
+.panel .toolbar .save-button:hover {
+    text-decoration: underline;    
+}
+.panel .toolbar p {
+    padding: 5px;
+    color: #AAA;
+    font-size: 13px;
+}
