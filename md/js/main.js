@@ -5,6 +5,7 @@ var Converter = new Markdown.Converter();
 Editor = {
     signupContainer : $('*[data-signup]'),
     loginContainer : $('*[data-login]'),
+    editorContainer : $('*[data-editor]'),
 
     showLoginButton : $('*[data-show-login]'),
     showSignupButton : $('*[data-show-signup]'),
@@ -19,6 +20,7 @@ Editor = {
     filesList : $('*[data-files-list]'),
     newFileButton : $('*[data-new-file]'),
     
+    toolbar : $('*[data-toolbar]'),
     saveButton : $('*[data-save-button]'),
     wordCount : $('*[data-word-count]'),
     
@@ -101,6 +103,7 @@ Editor = {
         this.loginContainer.hide();
 
         this.loadFiles();
+        this.editorContainer.removeClass("noauth");
     },
     
     loadFiles : function() {

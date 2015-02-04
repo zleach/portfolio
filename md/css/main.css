@@ -122,3 +122,10 @@ iframe {
     color: #AAA;
     font-size: 13px;
 }
+
+.panel.editor.noauth .toolbar{
+    display: none;
+}
+.panel.editor.noauth textarea{
+    top: 0px;
+}
