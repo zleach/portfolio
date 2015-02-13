@@ -22,6 +22,7 @@ Editor = {
     
     toolbar : $('*[data-toolbar]'),
     saveButton : $('*[data-save-button]'),
+    previewButton : $('*[data-preview-button]'),
     wordCount : $('*[data-word-count]'),
     fileName : $('*[data-filename]'),
         
@@ -32,8 +33,7 @@ Editor = {
         this.newFileButton.click(this.createFile);
         this.saveButton.click(this.save);
         this.fileName.change(this.fileNameChanged);
-      
-      
+        this.previewButton.click(this.showPreview);      
         this.initIframe();                   
         this.authFormInit();
         this.checkAuth();
@@ -394,7 +394,13 @@ Editor = {
                 });
             }
         });  
-    },    
+    },
+
+    showPreview : function(event){
+        var html = Editor.contentIframe.contents().find("html").html();
+        var win = window.open("", "Preview", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=780, height=600, top="+(screen.height-400)+", left="+(screen.width-840));
+        win.document.write(html);
+    },
 }
 
 function getCaret(el) { 

@@ -96,7 +96,10 @@ body {
   font-weight: 400;
   font-family: "Merriweather", "Georgia",sans-serif;
   color: #222; 
-  padding: 20px;  
+  padding: 40px 20px;
+  max-width: 50em;
+  margin: 0 auto;
+  padding-bottom: 50%;
 }
 
 
@@ -342,6 +345,9 @@ hr {
   border-width: 0;
   border-top: 1px solid #E1E1E1; }
 
+img {
+  max-width: 100%;
+}
 
 /* Clearing
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -387,3 +393,20 @@ p,span,h1,h2,h3,h4,h5,h6 {
 .highlight {
     background-color: rgba(255, 255, 153, 0.2);
 }
+
+
+
+@media only print {
+  body{
+    max-width: 100%;
+    padding: 0px;
+    margin:.5in .5in .5in .5in; 
+    font-size: 1.1em; /* currently ems cause chrome bug misinterpreting rems on body element */
+    line-height: 1.6;
+    font-weight: 400;
+    font-family: "Merriweather", "Georgia",sans-serif;
+    color: #000;
+    padding-bottom: 0px;
+  }
+}
+

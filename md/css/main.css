@@ -198,6 +198,7 @@ iframe {
     color: #AAA;
     font-size: 13px;
 }
+<<<<<<< HEAD
 .panel .toolbar input {
     margin: 0px;
     margin-left: 45px;
@@ -236,6 +237,9 @@ iframe {
     background-image: url('../img/t.svg');
     background-position: center 7px;
     background-repeat: no-repeat;
+}
+.panel .toolbar h5 {
+    margin-left: 20px;
 }
 
 .panel.editor.noauth .toolbar{
