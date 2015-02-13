@@ -7,6 +7,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <link href='http://fonts.googleapis.com/css?family=Noto+Sans:400,700' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/main.css">
         
@@ -46,15 +47,20 @@
                     </form>                    
                 </div>
                 <div class="files none" data-files>
-                    <h5>Your Files <span data-new-file>New</span></h5>
+                    <div class="toolbar">
+                        <h5><span class="plus-button" data-new-file></span></h5>
+                    </div>
                     <ul data-files-list></ul>
                 </div>
 
             </div>
             <div class="panel editor noauth" data-editor>
                 <div class="toolbar">
+                    <div class="t"></div>
+                    <input class="pull-left" data-filename>
                     <p class="pull-left" data-word-count></p>
-                    <h5 class="pull-right save-button" data-save-button>Save Version</h5>
+                    <h5 class="pull-right save-button" data-save-button></h5>
+                    <h5 class="pull-right preview-button" data-preview-button></h5>
                 </div>
             </div>
             <div class="panel content" data-content></div>

@@ -23,13 +23,16 @@ Editor = {
     toolbar : $('*[data-toolbar]'),
     saveButton : $('*[data-save-button]'),
     wordCount : $('*[data-word-count]'),
-    
+    fileName : $('*[data-filename]'),
+        
     init : function(){
         Parse.initialize("975HD9WnmXUF9qZ6nYCY5QIES1eVeIDupfsbblWa",
                          "VNQhaaERrnygNJI91J4zfMYBtP72i0YOBZEJ4UjE");        
                          
         this.newFileButton.click(this.createFile);
         this.saveButton.click(this.save);
+        this.fileName.change(this.fileNameChanged);
+      
       
         this.initIframe();                   
         this.authFormInit();
@@ -132,26 +135,62 @@ Editor = {
         for (var i=0; i<len; ++i) {
             if (i in Editor.files) {
                 var file = Editor.files[i];
-                var fileItem = $('<li>'+moment(file.createdAt).fromNow()+'</li>');
+                var fileItem = $('<li>'+'<p class="name">'+file.get('name')+'</p>'+'<p class="details">'+moment(file.updatedAt).fromNow()+'</p><span class="delete"></span></li>');
                 fileItem.click(Editor.fileClicked);
+                fileItem.find('.delete').click(Editor.deleteFile);
                 fileItem.data('id',file.id);
+                fileItem.data('file',file);
                 fileItem.data('gist',file.get('gist'))  ;
                 Editor.filesList.append(fileItem);
-
-                //if(i==0) fileItem.click();
+                
+                if(localStorage.getItem('lastViewed')) {
+                    var lastViewed = localStorage.getItem('lastViewed');
+                    if(lastViewed == file.id) {
+                        fileItem.click();
+                    }
+                }
             }
         }
-        
+    },
+    
+    fileNameChanged : function(event){
+        var newName = Editor.fileName.val();
+
+        Editor.file.set("name",newName);
+        Editor.file.save(null, {
+            success: function(file) {
+                Editor.loadFiles();                
+            },
+            error: function(file, error) {}
+        });
     },
     
     fileClicked : function(event){
         var file = $(event.target);
         var gist = file.data('gist');
+        var id = file.data('id');
 
-        Editor.filesList.find('.active').removeClass('active')
+        localStorage.setItem('lastViewed', id);
+        
+        
+        Editor.filesList.find('.active').removeClass('active');
+        Editor.file = $(event.target).data('file');
+        Editor.fileName.val(Editor.file.get('name'));
         file.addClass('active');
         
         Editor.loadGist(gist)
+    },
+    deleteFile : function(event){
+        var file = $(event.target).parent().data('file');
+        
+        file.destroy({
+          success: function(myObject) {
+            Editor.loadFiles();
+          },
+          error: function(myObject, error) {
+            // Don't worry
+          }
+        });        
     },
     
     loadGist : function(gist) {
@@ -189,12 +228,11 @@ Editor = {
             dataType: 'json',
             data: JSON.stringify(data)
         })
-        .success(function(gist) {
-            console.log(gist);
-            
+        .success(function(gist) {            
             var file = new File();
             
             file.set("gist", gist.id);
+            file.set("name", "Untitled");
             file.save(null, {
                 success: function(file) {
                     Editor.loadFiles();
@@ -223,7 +261,6 @@ Editor = {
     },
     
     save : function(){
-        console.log("saving... ",Editor.gist)
         var data = {
             "description": "the description for this gist",
             "public": false,
@@ -234,6 +271,15 @@ Editor = {
             }
         }
 
+        var hash = Math.random().toString(36).slice(2);
+        Editor.file.set("hash",hash);
+        Editor.file.save(null, {
+            success: function(file) {
+                Editor.loadFiles();                
+            },
+            error: function(file, error) {}
+        });
+
         $.ajax({
             url: 'https://api.github.com/gists/'+Editor.gist.id+'?access_token=9cb935aa5173030d5bd0f63bbf7a6ac36b5e996c',
             type: 'PATCH',
@@ -241,7 +287,7 @@ Editor = {
             data: JSON.stringify(data)
         })
         .success( function(gist) {
-            Editor.wordCount.text("Saved").show().delay(2000).fadeOut();
+            Editor.wordCount.text("Saved Revision").show().delay(2000).fadeOut();
         })
         .error( function(e) {
             console.warn("gist save error", e);
@@ -263,9 +309,27 @@ Editor = {
         this.editorContainer.append(Editor.textarea);
         var oldVal = "";
             
-        this.textarea.on("change keyup keydown paste click", function() {
+        this.textarea.on("change keyup keydown paste click", function(e) {
             var currentVal = $(this).val();
-             
+            
+            // Handle <TAB> key
+            if(e.type == 'keydown' && e.keyCode === 9) {
+                var start = this.selectionStart;
+                var end = this.selectionEnd;
+                
+                var $this = $(this);
+                var value = $this.val();
+                
+                // set textarea value to: text before caret + tab + text after caret
+                $this.val(value.substring(0, start)
+                    + "\t"
+                    + value.substring(end));
+                
+                this.selectionStart = this.selectionEnd = start + 1;
+                
+                e.preventDefault();
+            }
+            
             // Content Management
             if(currentVal == oldVal) {
                 return; //check to prevent multiple simultaneous triggers
