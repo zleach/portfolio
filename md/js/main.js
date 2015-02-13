@@ -32,8 +32,10 @@ Editor = {
                          
         this.newFileButton.click(this.createFile);
         this.saveButton.click(this.save);
+
         this.fileName.change(this.fileNameChanged);
         this.previewButton.click(this.showPreview);      
+      
         this.initIframe();                   
         this.authFormInit();
         this.checkAuth();
