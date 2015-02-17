@@ -354,6 +354,10 @@ ol,
 form {
   margin-bottom: 2.5rem; }
 
+figure {
+    margin-left: 0px;
+    margin-right: 0px;
+}
 
 /* Utilities
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -475,37 +479,63 @@ blockquote.pull-right .small:after {
   content: '\00A0 \2014';
 }
 
-img[alt="Half"],
-img[alt="half"] {
+figcaption {
+    margin-top: 5px;
+    font-size: 80%;
+    color: #999;
+}
+
+figure[alt="Half"],
+figure[alt="half"] {
     float: left;
     width: 50%;
-    margin-right: 20px;
+    margin-right: 1.5em;
+    margin-bottom: 1em;
 }
 
-img[alt="Third"],
-img[alt="third"] {
+figure[alt="Third"],
+figure[alt="third"] {
     float: left;
     width: 33.33%;
-    margin-right: 20px;
+    margin-right: 1.5em;
+    margin-bottom: 1em;
 }
 
-img[alt="Quarter"],
-img[alt="quarter"] {
+figure[alt="Quarter"],
+figure[alt="quarter"] {
     float: left;
     width: 25%;
-    margin-right: 20px;
+    margin-right: 1.5em;
+    margin-bottom: 1em;
 }
 
+figure[alt="Half"] figcaption,
+figure[alt="half"] figcaption,
+figure[alt="third"] figcaption,
+figure[alt="Third"] figcaption,
+figure[alt="Quarter"] figcaption,
+figure[alt="quarter"] figcaption {
+    width: 100%;
+}
+
+figure[alt="Half"] img,
+figure[alt="half"] img,
+figure[alt="third"] img,
+figure[alt="Third"] img,
+figure[alt="Quarter"] img,
+figure[alt="quarter"] img {
+    width: 100%;
+}
 
 
 /* Landscape phones and smaller */
 @media (max-width: 480px) {
-    img[alt="Quarter"],
-    img[alt="quarter"],
-    img[alt="Third"],
-    img[alt="third"],
-    img[alt="Half"],
-    img[alt="half"] {
+    figure[alt="Quarter"],
+    figure[alt="quarter"],
+    figure[alt="Third"],
+    figure[alt="third"],
+    figure[alt="Half"],
+    figure[alt="half"] {
         float: none;
         width: 100%;
         margin-right: 0px;
