@@ -213,6 +213,31 @@ Editor = {
         });              
     },
     
+    uploadImage : function(file){
+        $.ajax({
+            url: 'https://api.imgur.com/3/upload',
+            type: 'POST',
+            headers: {"Authorization" : 'Client-ID c73b5d86b3d2b6f'},
+            data: {
+                type: 'base64',
+                image : file,
+            },
+        }).success(function(response) {
+            var link = response.data.link;
+            Editor.insertImageLink(link)
+        }).error(function(data) {
+            console.warn(data.responseText);
+        });
+    },
+    
+    insertImageLink : function(link){
+        var caretPos = Editor.textarea.get()[0].selectionStart;
+        var textAreaTxt = Editor.textarea.val();
+        var txtToAdd = "\n![]("+link+")\n";
+        Editor.textarea.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));  
+        Editor.updateContent();      
+    },
+    
     createFile : function(){        
         var data = {
             "description": "the description for this gist",
@@ -250,7 +275,7 @@ Editor = {
         });    
 
     },
-    
+        
     refresh : function(){
         var content = Editor.textarea.text();
         Editor.updateContent();         
@@ -303,14 +328,56 @@ Editor = {
         this.contentIframe = $('<iframe>');
         this.contentContainer.append(this.contentIframe);
     
-        this.contentIframe.contents().find('head').append("<link href='http://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet' type='text/css'>");
+//         this.contentIframe.contents().find('head').append("<link href='http://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet' type='text/css'>");
         this.contentIframe.contents().find('head').append('<link rel="stylesheet" href="css/normalize.css" type="text/css" />');
         this.contentIframe.contents().find('head').append('<link rel="stylesheet" href="css/skeleton.css" type="text/css" />');
     
         this.textarea = $('<textarea>');
         this.editorContainer.append(Editor.textarea);
         var oldVal = "";
-            
+        
+        // Image Uploading
+        this.textarea
+            .bind("dragover", false)
+            .bind("dragenter", false)
+            .bind("drop", function(e) {
+                e.preventDefault();
+                var files = e.originalEvent.dataTransfer.files;
+                var output = [];
+
+                for (var i = 0, file; file = files[i]; i++) {
+                    
+                    // Only match images
+                    if (!file.type.match('image.*')) {
+                        continue;
+                    }
+
+                    var reader = new FileReader();
+
+                    // Closure to capture the file information.
+                    reader.onload = (function(theFile) {
+                    return function(e) {
+                        var imageData = e.target.result;
+
+                        // Cleanse the data
+                        imageData = imageData.replace('data:image/png;base64,', '');
+                        imageData = imageData.replace('data:image/jpeg;base64,', '');
+                        imageData = imageData.replace('data:image/gif;base64,', ''); 
+                        Editor.uploadImage(imageData);                        
+                    };
+                    })(file);
+                    
+                    // Read in the image file as a data URL.
+                    reader.readAsDataURL(file);
+                }
+
+                
+            return false;
+        });
+        
+        
+        
+        // Typing / Content Updaing
         this.textarea.on("change keyup keydown paste click", function(e) {
             var currentVal = $(this).val();
             
@@ -341,6 +408,7 @@ Editor = {
             Editor.updateContent(currentVal);
         });
         
+        // Scrolling / Centering 
         this.textarea.on("keyup click", function(e) {
             var currentVal = $(this).val();
             var position = getCaret(this);
@@ -367,8 +435,6 @@ Editor = {
                     }
                 });
                 
-                //var positionOfElementToScrollTo = contentIframe.contents().find("*[data-uuid="+caretId[0][1]+"]").position().top
-    
                 var el = Editor.contentIframe.contents().find("*[data-uuid="+caretId[0][1]+"]");
     
                 if(e.type=='click')
