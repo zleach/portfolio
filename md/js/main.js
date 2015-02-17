@@ -1,6 +1,7 @@
 var ContentMap = [];
 var File = Parse.Object.extend("File");
 var Converter = new Markdown.Converter();
+Markdown.Extra.init(Converter);
 
 Editor = {
     signupContainer : $('*[data-signup]'),
@@ -39,6 +40,34 @@ Editor = {
         this.initIframe();                   
         this.authFormInit();
         this.checkAuth();
+        this.disableDeleteKeyNavigation();
+    },
+
+    disableDeleteKeyNavigation : function() {
+        // Ever hate it when you press backspace and it navigates you away?
+        // This prevents that.
+        $(document).unbind('keydown').bind('keydown', function (event) {
+            var doPrevent = false;
+            if (event.keyCode === 8) {
+                var d = event.srcElement || event.target;
+                if ((d.tagName.toUpperCase() === 'INPUT' && (
+                         d.type.toUpperCase() === 'TEXT' ||
+                         d.type.toUpperCase() === 'PASSWORD' || 
+                         d.type.toUpperCase() === 'FILE' || 
+                         d.type.toUpperCase() === 'EMAIL' || 
+                         d.type.toUpperCase() === 'SEARCH' || 
+                         d.type.toUpperCase() === 'DATE' )
+                    ) || 
+                    d.tagName.toUpperCase() === 'TEXTAREA') {
+                    doPrevent = d.readOnly || d.disabled;
+                }
+                else {
+                    doPrevent = true;
+                }
+            }
+        
+            if (doPrevent) event.preventDefault();
+        });  
     },
 
     authFormInit : function(){
@@ -284,7 +313,8 @@ Editor = {
     updateContent : function(){
         var content = this.textarea.val();        
         var html = Converter.makeHtml(content)
-        this.contentIframe.contents().find('body').html(html)        
+        this.contentIframe.contents().find('body').html(html)
+        this.contentIframe.get()[0].contentWindow.Content.reload()
     },
     
     save : function(){
@@ -328,9 +358,25 @@ Editor = {
         this.contentIframe = $('<iframe>');
         this.contentContainer.append(this.contentIframe);
     
-//         this.contentIframe.contents().find('head').append("<link href='http://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet' type='text/css'>");
+        this.contentIframe.contents().find('head').append('<meta charset="utf-8"> ');
         this.contentIframe.contents().find('head').append('<link rel="stylesheet" href="css/normalize.css" type="text/css" />');
         this.contentIframe.contents().find('head').append('<link rel="stylesheet" href="css/skeleton.css" type="text/css" />');
+        this.contentIframe.contents().find('head').append('<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">');
+        
+        var scripts = [
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js',
+            'http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js',
+            'js/content.js'
+        ]
+
+        $.each(scripts, function(i,src){
+            var s = document.createElement("script");
+            s.type = "text/javascript";
+            s.src = src;
+            var iframeDocument = Editor.contentIframe.get()[0].contentDocument || Editor.contentIframe.get()[0].contentWindow.document;        
+            iframeDocument.body.appendChild(s);    
+        })
+            
     
         this.textarea = $('<textarea>');
         this.editorContainer.append(Editor.textarea);
@@ -466,9 +512,46 @@ Editor = {
 
     showPreview : function(event){
         var html = Editor.contentIframe.contents().find("html").html();
-        var win = window.open("", "Preview", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=780, height=600, top="+(screen.height-400)+", left="+(screen.width-840));
-        win.document.write(html);
+
+        var base64 = Base64.encode(html);
+        var file = new Parse.File("preview.html", { base64: base64 }, "text/html");
+        
+        console.log(file);
+        
+        file.save().then(function() {
+            var win = window.open(file._url, "Preview", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=780, height=600, top="+(screen.height-400)+", left="+(screen.width-840));
+            //win.document.write(html);
+        }, function(error) {
+          // The file either could not be read, or could not be saved to Parse.
+        });
+/*
+        var data = {
+            "description": "Preview",
+            "public": false,
+            "files": {
+                "preview.html": {
+                    "content": "<!DOCTYPE html><html>"+html+"</html>"
+                }
+            }
+        }
+
+        $.ajax({
+            url: 'https://api.github.com/gists?access_token=9cb935aa5173030d5bd0f63bbf7a6ac36b5e996c',
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify(data)
+        })
+        .success(function(gist) {            
+            console.log(gist);
+        })
+        .error(function(e) {
+            console.warn("gist save error", e);
+        });    
+*/
+
     },
+
+
 }
 
 function getCaret(el) { 
@@ -492,7 +575,144 @@ function getCaret(el) {
   return 0; 
 }
 
+var Base64 = {
 
-$( document ).ready(function() {
+// private property
+_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+
+// public method for encoding
+encode : function (input) {
+    var output = "";
+    var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+    var i = 0;
+
+    input = Base64._utf8_encode(input);
+
+    while (i < input.length) {
+
+        chr1 = input.charCodeAt(i++);
+        chr2 = input.charCodeAt(i++);
+        chr3 = input.charCodeAt(i++);
+
+        enc1 = chr1 >> 2;
+        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+        enc4 = chr3 & 63;
+
+        if (isNaN(chr2)) {
+            enc3 = enc4 = 64;
+        } else if (isNaN(chr3)) {
+            enc4 = 64;
+        }
+
+        output = output +
+        this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) +
+        this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
+
+    }
+
+    return output;
+},
+
+// public method for decoding
+decode : function (input) {
+    var output = "";
+    var chr1, chr2, chr3;
+    var enc1, enc2, enc3, enc4;
+    var i = 0;
+
+    input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+    while (i < input.length) {
+
+        enc1 = this._keyStr.indexOf(input.charAt(i++));
+        enc2 = this._keyStr.indexOf(input.charAt(i++));
+        enc3 = this._keyStr.indexOf(input.charAt(i++));
+        enc4 = this._keyStr.indexOf(input.charAt(i++));
+
+        chr1 = (enc1 << 2) | (enc2 >> 4);
+        chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+        chr3 = ((enc3 & 3) << 6) | enc4;
+
+        output = output + String.fromCharCode(chr1);
+
+        if (enc3 != 64) {
+            output = output + String.fromCharCode(chr2);
+        }
+        if (enc4 != 64) {
+            output = output + String.fromCharCode(chr3);
+        }
+
+    }
+
+    output = Base64._utf8_decode(output);
+
+    return output;
+
+},
+
+// private method for UTF-8 encoding
+_utf8_encode : function (string) {
+    string = string.replace(/\r\n/g,"\n");
+    var utftext = "";
+
+    for (var n = 0; n < string.length; n++) {
+
+        var c = string.charCodeAt(n);
+
+        if (c < 128) {
+            utftext += String.fromCharCode(c);
+        }
+        else if((c > 127) && (c < 2048)) {
+            utftext += String.fromCharCode((c >> 6) | 192);
+            utftext += String.fromCharCode((c & 63) | 128);
+        }
+        else {
+            utftext += String.fromCharCode((c >> 12) | 224);
+            utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+            utftext += String.fromCharCode((c & 63) | 128);
+        }
+
+    }
+
+    return utftext;
+},
+
+// private method for UTF-8 decoding
+_utf8_decode : function (utftext) {
+    var string = "";
+    var i = 0;
+    var c = c1 = c2 = 0;
+
+    while ( i < utftext.length ) {
+
+        c = utftext.charCodeAt(i);
+
+        if (c < 128) {
+            string += String.fromCharCode(c);
+            i++;
+        }
+        else if((c > 191) && (c < 224)) {
+            c2 = utftext.charCodeAt(i+1);
+            string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+            i += 2;
+        }
+        else {
+            c2 = utftext.charCodeAt(i+1);
+            c3 = utftext.charCodeAt(i+2);
+            string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+            i += 3;
+        }
+
+    }
+
+    return string;
+}
+
+}
+
+
+
+$(document).ready(function() {
     Editor.init();
 });
