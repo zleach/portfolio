@@ -358,11 +358,12 @@ Editor = {
         this.contentIframe = $('<iframe>');
         this.contentContainer.append(this.contentIframe);
     
-        this.contentIframe.contents().find('head').append('<meta charset="utf-8"> ');
+        this.contentIframe.contents().find('head').append('<meta charset="utf-8">');
         this.contentIframe.contents().find('head').append('<link rel="stylesheet" href="css/normalize.css" type="text/css" />');
         this.contentIframe.contents().find('head').append('<link rel="stylesheet" href="css/skeleton.css" type="text/css" />');
         this.contentIframe.contents().find('head').append('<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">');
         
+
         var scripts = [
             'http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js',
             'http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js',
@@ -513,42 +514,20 @@ Editor = {
     showPreview : function(event){
         var html = Editor.contentIframe.contents().find("html").html();
 
+        // Absolutize URLs
+        html = html.replace('href="css/normalize.css"','href="http://zachleach.com/md/css/normalize.css"');
+        html = html.replace('href="css/skeleton.css"','href="http://zachleach.com/md/css/skeleton.css"');
+        html = html.replace('src="js/content.js"','href="http://zachleach.com/md/js/content.js"');
+        
         var base64 = Base64.encode(html);
         var file = new Parse.File("preview.html", { base64: base64 }, "text/html");
-        
-        console.log(file);
-        
+                
         file.save().then(function() {
             var win = window.open(file._url, "Preview", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=780, height=600, top="+(screen.height-400)+", left="+(screen.width-840));
             //win.document.write(html);
         }, function(error) {
-          // The file either could not be read, or could not be saved to Parse.
+            // Error
         });
-/*
-        var data = {
-            "description": "Preview",
-            "public": false,
-            "files": {
-                "preview.html": {
-                    "content": "<!DOCTYPE html><html>"+html+"</html>"
-                }
-            }
-        }
-
-        $.ajax({
-            url: 'https://api.github.com/gists?access_token=9cb935aa5173030d5bd0f63bbf7a6ac36b5e996c',
-            type: 'POST',
-            dataType: 'json',
-            data: JSON.stringify(data)
-        })
-        .success(function(gist) {            
-            console.log(gist);
-        })
-        .error(function(e) {
-            console.warn("gist save error", e);
-        });    
-*/
-
     },
 
 
