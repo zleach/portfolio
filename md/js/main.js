@@ -2,6 +2,7 @@ var ContentMap = [];
 var File = Parse.Object.extend("File");
 var Converter = new Markdown.Converter();
 Markdown.Extra.init(Converter);
+var AutoSaveTime = 30000;
 
 Editor = {
     signupContainer : $('*[data-signup]'),
@@ -37,6 +38,8 @@ Editor = {
         this.fileName.change(this.fileNameChanged);
         this.previewButton.click(this.showPreview);      
       
+        this.autoSaveInit();
+
         this.initIframe();                   
         this.authFormInit();
         this.checkAuth();
@@ -68,6 +71,20 @@ Editor = {
         
             if (doPrevent) event.preventDefault();
         });  
+
+        this.didLoadFirstPage = false;
+    },
+
+    autoSaveInit : function(){
+        setInterval(this.autoSave,AutoSaveTime);
+    },
+
+    autoSave : function(){
+        var currentContent = Editor.textarea.val();
+        if(currentContent!=Editor.lastSavedContent){
+            Editor.save();
+            console.log("SAVE");
+        }
     },
 
     authFormInit : function(){
@@ -174,10 +191,12 @@ Editor = {
                 fileItem.data('gist',file.get('gist'))  ;
                 Editor.filesList.append(fileItem);
                 
-                if(localStorage.getItem('lastViewed')) {
+
+                if(localStorage.getItem('lastViewed') && Editor.didLoadFirstPage == false) {
                     var lastViewed = localStorage.getItem('lastViewed');
                     if(lastViewed == file.id) {
                         fileItem.click();
+                        Editor.didLoadFirstPage = true;
                     }
                 }
             }
@@ -318,12 +337,14 @@ Editor = {
     },
     
     save : function(){
+        var content = Editor.textarea.val();
+
         var data = {
             "description": "the description for this gist",
             "public": false,
             "files": {
                 "file1.txt": {
-                    "content": Editor.textarea.val()
+                    "content": content
                 }
             }
         }
@@ -345,6 +366,7 @@ Editor = {
         })
         .success( function(gist) {
             Editor.wordCount.text("Saved Revision").show().delay(2000).fadeOut();
+            Editor.lastSavedContent = content;
         })
         .error( function(e) {
             console.warn("gist save error", e);
@@ -528,6 +550,14 @@ Editor = {
         }, function(error) {
             // Error
         });
+        var w = 820;
+        var h = window.innerHeight;
+        var left = (screen.width/2)-(w/2);
+        var top = (screen.height/2)-(h/2);
+
+        if(Editor.previewWindow) Editor.previewWindow.close();
+        Editor.previewWindow = window.open("", "Preview", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+        Editor.previewWindow.document.write(html);
     },
 
 
