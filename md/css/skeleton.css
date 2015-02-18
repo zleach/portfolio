@@ -545,6 +545,10 @@ figure[alt="quarter"] img {
 @page  { 
   size:8.27in 11.69in; 
   margin:.5in .5in .5in .5in; 
+
+  @bottom-right {
+    content: counter(page);
+  }
 } 
 
 @media only print {
