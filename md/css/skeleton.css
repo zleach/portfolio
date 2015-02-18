@@ -543,14 +543,13 @@ figure[alt="quarter"] img {
 }
 
 @media only print {
-  body{
+  body {
     max-width: 100%;
     padding: 0px;
     margin:.5in .5in .5in .5in; 
-    font-size: 1.1em; /* currently ems cause chrome bug misinterpreting rems on body element */
+    font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
     line-height: 1.6;
     font-weight: 400;
-    font-family: "Merriweather", "Georgia",sans-serif;
     color: #000;
     padding-bottom: 0px;
   }
