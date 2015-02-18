@@ -544,7 +544,7 @@ figure[alt="quarter"] img {
 
 @page  { 
   size:8.27in 11.69in; 
-  margin:.5in .5in .5in .5in; 
+  margin:.5in .3in .5in .3in; 
 } 
 
 @media only print {
