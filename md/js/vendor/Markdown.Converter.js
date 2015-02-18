@@ -1059,7 +1059,11 @@ else
                             item = _RunSpanGamut(item);
                     }
                     last_item_had_a_double_newline = ends_with_double_newline;
-                    return "<li>" + item + "</li>\n";
+
+                    var UUID = Math.random().toString(36).slice(2);
+                    ContentMap.push([g_rawText.indexOf(item),UUID])
+
+                    return "<li data-uuid='"+UUID+"'>" + item + "</li>\n";
                 }
             );
 
