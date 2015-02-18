@@ -551,7 +551,6 @@ figure[alt="quarter"] img {
   body {
     max-width: 100%;
     padding: 0px;
-    margin: 25mm 25mm 25mm 25mm;
     font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
     line-height: 1.6;
     font-weight: 400;
