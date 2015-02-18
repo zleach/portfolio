@@ -542,11 +542,16 @@ figure[alt="quarter"] img {
     }
 }
 
+@page  { 
+  size:8.27in 11.69in; 
+  margin:.5in .5in .5in .5in; 
+} 
+
 @media only print {
   body {
     max-width: 100%;
     padding: 0px;
-    margin: 1in .5in 1in .5in; 
+    margin: 25mm 25mm 25mm 25mm;
     font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
     line-height: 1.6;
     font-weight: 400;
